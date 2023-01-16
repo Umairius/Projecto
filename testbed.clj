@@ -1,1 +1,1 @@
-(println(= 1 (Integer/parseInt "1")))
+(if 0 (println "Duck"))

@@ -68,43 +68,62 @@
 (defn selectRecords [key]
 
   ;; (println key)
-  (doseq [n @Table]
-
-    ;; (println (contains? n (keyword (get key 0))))))
-    ;; (println n)
+  (doseq [n @Table] 
+    ;; (println (class (n :salary)))
     
     
-    ;; (println (get n  (Integer/parseInt :salary)))
-    ;; (println (and contains? n (keyword (get key 0)) (= 10000 (Integer/parseInt (get n :salary))))) 
-    
-    
-    (if  (and contains? n (keyword (get key 0)) ( = 10000 (Integer/parseInt (get n :salary))))
-      
-      (println "salary is 10000")
-      
+    (if (contains? n :salary)
+       (if  (= 1000  (Integer/parseInt (get n :salary)))
+         (println "Record Found: " n)
+         (println "No Records Found")) 
+      (println "key not found");
       )
+   
     
-  )
+    )
   
 )
+
+
 
 
 
 (defn deleteRecords [key]
   
   
+  (defn remove-indexed [v n]
+    (into (subvec v 0 n) (subvec v (inc n))))
   
+   (doseq [n @Table]
+
+    ;; (println @Table)
+    ;; (println (get n :id))
+    
+
+    (println (class (get key 2)))
+    (if (contains? n (keyword (get key 0)))
+      (if (=  (Integer/parseInt (get key 2)) (Integer/parseInt (get n :salary)))
+        
+        (do
+          (reset! Table (remove-indexed @Table (.indexOf @Table n)))
+          (println n " has been employeeted"))
+        )
+      
+      )
+    
+    
+    
+    )
+         
+         
+         
+         
+         )
   
-  
-  
-  
-  
-  )
-
-
-
-
-
-
 (createTable)
-(selectRecords["salary" "equals" 1000])
+;; (selectRecords["salary" "equals" 1000])
+
+
+(println @Table)
+(deleteRecords["salary" "equals" "1"])
+(println @Table)
