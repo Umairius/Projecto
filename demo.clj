@@ -134,6 +134,11 @@
   
   
   )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (defn select-records [tablename query]
 
   
@@ -167,21 +172,18 @@
   (println queryElements )
   (println "this is query elements: "(nth queryElements 0))
   
+  
+  (def queriedValue (nth queryElements 2)) 
+  (def recordInstance (nth @tableData thisTableIndex))
+  
   (if (= := (nth queryElements 0)) 
     
     
      (dotimes [n (count (nth @tableData thisTableIndex))]
        
-       (println "The queried value is: " (nth queryElements 2))
-       (println "The value from table is:"  (get (nth (nth @tableData thisTableIndex) n)  (nth queryElements 1)))
-;; (println "The desired key value from table" (Integer/parseInt (get (nth (nth @tableData thisTableIndex) n)  (nth queryElements 1)))) 
-       
-       (println (compare (Integer/parseInt (get (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))) (Integer/parseInt (nth queryElements 2)) ))
-       
        (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1)) 
-         (if (= (Integer/parseInt (get (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))) (Integer/parseInt (nth queryElements 2))) 
-           (println "Record Found: "(nth (nth @tableData thisTableIndex) n) )
-         
+         (if (==  (get (nth recordInstance n) (nth queryElements 1))  queriedValue) 
+           (println "Record Found: "(nth (nth @tableData thisTableIndex) n) ) 
          )
     ;;records of single tables have been acceessed.
        )
@@ -192,57 +194,136 @@
     
     (if (= :>= (nth queryElements 0))
 
-      (println "Greater than Equal to"))
+          (dotimes [n (count (nth @tableData thisTableIndex))]
+            (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
+              (if (>=  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
+                (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
+    ;;records of single tables have been acceessed.
+              ))
+      
+      )
   
     (if (= :<= (nth queryElements 0))
 
-      (println "Less than Equal to"))
+           (dotimes [n (count (nth @tableData thisTableIndex))]
+
+            (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
+              (if (<=  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
+                (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
+    ;;records of single tables have been acceessed.
+              )
+             
+             )
+      
+      )
+  
+      
+
   
     (if (= :> (nth queryElements 0))
 
-      (println "Greater than"))
+
+           (dotimes [n (count (nth @tableData thisTableIndex))]
+
+             (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
+               (if (>  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
+                 (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
+    ;;records of single tables have been acceessed.
+               )
+             )
+      
+      )
   
     (if (= :< (nth queryElements 0))
 
-      (println "Less than"))
+           (dotimes [n (count (nth @tableData thisTableIndex))]
+
+             (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
+               (if (<  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
+                 (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
+    ;;records of single tables have been acceessed.
+               ))
+      
+      
+      
+      )
+  
+    
+    
+)
+
+
+
+
+
+(defn delete [tableName query]
+
+
+  (def queryElements (flatten (vals query)))
+  (println queryElements)
+  (def operator (nth queryElements 0))
+  (def field (nth queryElements 1))
+  (def value (nth queryElements 2))
+  ;; (def newTable ())
+  
+    
+  (def queriedValue (nth queryElements 2))
+(def recordInstance (nth @tableData thisTableIndex))
+  (println recordInstance)
+    
+  (dotimes [n (count @tablemap)]
+
+    (if (= tableName (nth @tablemap n))
+      (def tableMapIndex n)))
+
+  ;; (println tableMapIndex)
+
+
+(def thisTableIndex  (eval (/ tableMapIndex 2)))
+  
+  (def newTable (nth @tableData thisTableIndex))
+  
+   (if (= := (nth queryElements 0))
+     
+     (do 
+       
+          (println "Equal to")
+
+(dotimes [n (count (nth @tableData thisTableIndex))]
+
+
+  ;; (println (nth (nth @tableData thisTableIndex) n))
+;; (println (get (nth (nth @tableData thisTableIndex) n) field ))
+  
+  (if (= (get (nth (nth @tableData thisTableIndex) n) field) value)
+    
+    (println "Yeet this record: " (nth (nth @tableData thisTableIndex) n) )
+    
+    
+    
+    
+
+    
+    )
   
   )
-
-
-
-
-
-;; (defn deleteRecords [key]
+       
+  
+       
+       )
+  
+     
+     
+     )
   
   
-;;   (defn remove-indexed [v n]
-;;     (into (subvec v 0 n) (subvec v (inc n))))
+    
+
+
+
   
-;;    (doseq [n @Table]
-
-;;     ;; (println @Table)
-;;     ;; (println (get n :id))
-    
-
-;;     (println (class (get key 2)))
-;;     (if (contains? n (keyword (get key 0)))
-;;       (if (=  (Integer/parseInt (get key 2)) (Integer/parseInt (get n :salary)))
-        
-;;         (do
-;;           (reset! Table (remove-indexed @Table (.indexOf @Table n)))
-;;           (println n " has been employeeted"))
-;;         )
-      
-;;       )
-    
-    
-    
-;;     )
-         
-         
-         
-         
-;;          )
+  
+  )
 
 
 
@@ -268,13 +349,23 @@
 
 
 (insert :ducks {:id 2 :first-name "HEHEHEHE" :last-name "Rakesh" :salary 123123 :wings 2242})
+
+(insert :ducks {:id 1 :first-name "HEHEHEHE" :last-name "Rakesh" :salary 123123 :wings 2242})
+(insert :ducks {:id 4 :first-name "HULUKULUKLU" :last-name "LALALLALALA" :salary 184 :wings 2242})
+
 (insert :applicants {:id 34534 :first-name "HE" :last-name "sssssd" :salary 123122342343 :wings 2242})
 
 
 
-(select-records :employee {:where [:= :salary 10000]})
+(select-records :employee {:where [:> :salary 1000]})
+
+(select-records :ducks{:where [:> :salary 1000]})
 
 
+
+;; (println @tableData)
+(delete :employee {:where [:= :id 1]})
+;; (println @tableData)
 
 
 
