@@ -20,14 +20,34 @@
 
 ;; (println @alltables)
 
-;; (reset! (nth @alltables 0) [(conj (nth @alltables 0) {:id "hehe"})])
 
-;; (println @alltables)
 
-(def alltables (atom [[{:id "hehesdshjsdfs222"}],[{:id "hehesdshjsdfs"}]]))
+;; (def table (atom [[{:id "ehhehe"} {:id "he"} {:id 222 :name "Alan"}] [{:id "duck"} {:name "jehehe"}]]))
 
-(println @alltables)
+;; (println @table)
 
-(swap! alltables update-in [0] conj {:id "hehe"})
+;; (swap! table update-in [0] #(concat (subvec % 0 2) (subvec % 3)))
 
-(println @alltables)
+
+;; (println @table)
+
+
+;; (def tablelength (atom 3))
+
+;; (println @tablelength)
+;; (reset! tablelength (eval (- @tablelength 1)))
+;; (println @tablelength)
+
+
+;; (def my-vec [1 2 3 4 5])
+;; (indexOf my-vec 3)
+
+
+(def ducks [:a :b :c :d :e])
+
+(dotimes [n (count ducks)]
+  
+  (println n)
+  
+  
+  )
