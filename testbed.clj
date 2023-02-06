@@ -17,6 +17,31 @@
 )
   )
 
-(println @hehe)
-(swap! hehe update-in [0] (fn [x] (vec (remove (fn [y] (if (> (get y :id) 1) true false)) x))))
-(println @hehe)
+;; (println @hehe)
+;; (swap! hehe update-in [0] (fn [x] (vec (remove (fn [y] (if (> (get y :id) 1) true false)) x))))
+;; (println @hehe)
+
+(let [op :=]
+  (cond 
+    (= := op) (doseq [table (nth @hehe 0)]
+                                   (when (= (:id table) 2)
+                                     (println "Record Found: " table)))
+
+    (= :>= op)(doseq [table (nth @hehe 0)]
+                (when (= (:id table) 2)
+                  (println "Record Found: " table)))
+
+    (= :<= op)(doseq [table (nth @hehe 0)]
+                (when (= (:id table) 2)
+                  (println "Record Found: " table)))
+
+    (= :> op)(doseq [table (nth @hehe 0)]
+               (when (= (:id table) 2)
+                 (println "Record Found: " table)))
+
+    (= :< op)(doseq [table (nth @hehe 0)]
+               (when (= (:id table) 2)
+                 (println "Record Found: " table)))
+
+    )
+  )
