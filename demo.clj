@@ -10,12 +10,8 @@
 
 
 (def tablemap (atom []))
-;;This holds the name and the corresponding rules for a particular table
-
-
-;; (def singletable(atom []))
 (def tableData (atom []))
-;;This hold the data for a particular table.
+
 
 
 
@@ -30,18 +26,11 @@
 
   (println @tablemap))
 
-  ;; (println @Table)
 
 
 (defn insert [tablename data]
 
-;; (println tablename data)
 
-
-  ;;search for table
-
-
-    ;; loop over the tablemap elements and store the index of the correct element
   (dotimes [n (count @tablemap)]
 
     (if (= tablename (nth @tablemap n))
@@ -55,22 +44,13 @@
     (if (= tablename (nth @tablemap n))
       (def types  (vals (nth @tablemap (eval (+ n 1)))))))
 
-  (println types)
 
-
-  ;; (println "this is types: "types)
-
-  ;; (println @tablemap)
   (def mapList (into [] @tablemap))
 
-  ;; (println mapList)
-
   (def recordData (into [] (vals data)))
-  ;; (println recordData)
 
   (dotimes [n (count types)]
 
-    ;; (println (nth types n))
 
     (if (= (nth types n) :string)
 
@@ -87,25 +67,11 @@
         (println "this entry shud be a number")
         (if (number? (nth recordData n))
           (println "the entered type is correct")
-          (println "the entered type is incorrect"))))
-
-
-
-    ;; (print "this is table index" tableIndex)
-    )
+          (println "the entered type is incorrect")))))
 
 
   (def dataIndex (eval (/ tableIndex 2)))
-
-  (println "This is all the tables" @tableData)
-
-
-
-  ;; (swap! tableData update-in [dataIndex] conj data)
-  (swap! tableData update-in [dataIndex] (fn [existing-data] (into [] (conj existing-data data))))
-
-
-  (println "This is all the tables" @tableData))
+  (swap! tableData update-in [dataIndex] (fn [existing-data] (into [] (conj existing-data data)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -119,36 +85,21 @@
     (if (= tablename (nth @tablemap n))
       (def tableMapIndex n)))
 
-  ;; (println tableMapIndex)
-
 
   (def thisTableIndex  (eval (/ tableMapIndex 2)))
 
-  ;; (println thisTableIndex)
-
-
   (dotimes [n (count (nth @tableData thisTableIndex))]
 
-    (println (nth (nth @tableData thisTableIndex) n))
+    (println (nth (nth @tableData thisTableIndex) n)))
 
-    ;;records of single tables have been acceessed.
-    )
-
-
-  (println "this is the query: " query)
 
   (def queryElements (flatten (vals query)))
-
-  (println queryElements)
-  (println "this is query elements: " (nth queryElements 0))
 
 
   (def queriedValue (nth queryElements 2))
   (def recordInstance (nth @tableData thisTableIndex))
 
   (if (= := (nth queryElements 0))
-
-
     (dotimes [n (count (nth @tableData thisTableIndex))]
 
       (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
@@ -163,9 +114,7 @@
     (dotimes [n (count (nth @tableData thisTableIndex))]
       (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
         (if (>=  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
-          (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
-    ;;records of single tables have been acceessed.
-        )))
+          (println "Record Found: " (nth (nth @tableData thisTableIndex) n))))))
 
   (if (= :<= (nth queryElements 0))
 
@@ -173,9 +122,7 @@
 
       (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
         (if (<=  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
-          (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
-    ;;records of single tables have been acceessed.
-        )))
+          (println "Record Found: " (nth (nth @tableData thisTableIndex) n))))))
 
 
 
@@ -187,9 +134,7 @@
 
       (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
         (if (>  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
-          (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
-    ;;records of single tables have been acceessed.
-        )))
+          (println "Record Found: " (nth (nth @tableData thisTableIndex) n))))))
 
   (if (= :< (nth queryElements 0))
 
@@ -197,201 +142,37 @@
 
       (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
         (if (<  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
-          (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))
-    ;;records of single tables have been acceessed.
-        ))))
+          (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))))))
 
 
 
 
 
 (defn delete [tableName query]
-
-
-  ;;the only flaw left in this is that when a record is deleted
-  ;;the number of elements decreases and hence the length decreases.
-  ;;this gives us the out of bounds error message
-
-  (def tablelength (atom 0))
-
-
-
   (def queryElements (flatten (vals query)))
-  (println queryElements)
   (def operator (nth queryElements 0))
   (def field (nth queryElements 1))
   (def value (nth queryElements 2))
-  ;; (def newTable ())
-
-
-  (def queriedValue (nth queryElements 2))
-  (def recordInstance (nth @tableData thisTableIndex))
-  (println recordInstance)
-
-
-  (defn remove-nth [v n]
-    
-    (println v n)
-    (vec (concat (subvec v 0 n) (subvec v (inc n)))))
-
-
 
   (dotimes [n (count @tablemap)]
 
     (if (= tableName (nth @tablemap n))
       (def tableMapIndex n)))
 
-  ;; (println tableMapIndex)
-
-
   (def thisTableIndex  (eval (/ tableMapIndex 2)))
-
-
-
-  (if (= := (nth queryElements 0))
-
-    (do
-
-      (println "Equal to")
-      (def hit (atom 0))
-      (dotimes [n (count (nth @tableData thisTableIndex))]
-        (println "Number of records: " (count (nth @tableData thisTableIndex)))
-        (println "n: " n)
-        (println "hit: " @hit)
-        ;; (println (get (nth (nth @tableData thisTableIndex) n) field))
-        (if (= (get (nth (nth @tableData thisTableIndex) (eval(- n @hit))) field) value)
-
-          (do
-            (println "Yeet this record: " (nth (nth @tableData thisTableIndex) (eval (- n @hit))))
-            (swap! tableData update-in [thisTableIndex] #(remove-nth % (eval(- n @hit))))
-            (println "Record Yeeted")
-            (println "This is the table after deletion: "(nth @tableData thisTableIndex))
-            (reset! hit (eval (+ @hit 1)))
-            
-            
-            )
-          )
-
-        )
-      
-      ))
-
-  (if (= :>= (nth queryElements 0))
-
-    (do
-
-      (println "Greater than Equal to")
-      (def hit (atom 0))
-      (dotimes [n (count (nth @tableData thisTableIndex))]
-        (println "Number of records: " (count (nth @tableData thisTableIndex)))
-        (println "n: " n)
-        (println "hit: " @hit)
-        ;; (println (get (nth (nth @tableData thisTableIndex) n) field))
-        (if (>= (get (nth (nth @tableData thisTableIndex) (eval (- n @hit))) field) value)
-
-          (do
-            (println "Yeet this record: " (nth (nth @tableData thisTableIndex) (eval (- n @hit))))
-            (swap! tableData update-in [thisTableIndex] #(remove-nth % (eval (- n @hit))))
-            (println "Record Yeeted")
-            (println "This is the table after deletion: " (nth @tableData thisTableIndex))
-            (reset! hit (eval (+ @hit 1))))))))
   
+  (def op (nth queryElements 0))
   
-    (if (= :<= (nth queryElements 0))
-
-      (do
-
-        (println "Less than Equal to")
-        (def hit (atom 0))
-        (dotimes [n (count (nth @tableData thisTableIndex))]
-          (println "Number of records: " (count (nth @tableData thisTableIndex)))
-          (println "n: " n)
-          (println "hit: " @hit)
-        ;; (println (get (nth (nth @tableData thisTableIndex) n) field))
-          (if (<= (get (nth (nth @tableData thisTableIndex) (eval (- n @hit))) field) value)
-
-            (do
-              (println "Yeet this record: " (nth (nth @tableData thisTableIndex) (eval (- n @hit))))
-              (swap! tableData update-in [thisTableIndex] #(remove-nth % (eval (- n @hit))))
-              (println "Record Yeeted")
-              (println "This is the table after deletion: " (nth @tableData thisTableIndex))
-              (reset! hit (eval (+ @hit 1))))))))
-    
-      (if (= :> (nth queryElements 0))
-
-        (do
-
-          (println "Greater Than ")
-          (def hit (atom 0))
-          (dotimes [n (count (nth @tableData thisTableIndex))]
-            (println "Number of records: " (count (nth @tableData thisTableIndex)))
-            (println "n: " n)
-            (println "hit: " @hit)
-        ;; (println (get (nth (nth @tableData thisTableIndex) n) field))
-            (if (> (get (nth (nth @tableData thisTableIndex) (eval (- n @hit))) field) value)
-
-              (do
-                (println "Yeet this record: " (nth (nth @tableData thisTableIndex) (eval (- n @hit))))
-                (swap! tableData update-in [thisTableIndex] #(remove-nth % (eval (- n @hit))))
-                (println "Record Yeeted")
-                (println "This is the table after deletion: " (nth @tableData thisTableIndex))
-                (reset! hit (eval (+ @hit 1))))))))
-      
-        (if (= :< (nth queryElements 0))
-
-          (do
-
-            (println "Greater than")
-            (def hit (atom 0))
-            (dotimes [n (count (nth @tableData thisTableIndex))]
-              (println "Number of records: " (count (nth @tableData thisTableIndex)))
-              (println "n: " n)
-              (println "hit: " @hit)
-        ;; (println (get (nth (nth @tableData thisTableIndex) n) field))
-              (if (< (get (nth (nth @tableData thisTableIndex) (eval (- n @hit))) field) value)
-
-                (do
-                  (println "Yeet this record: " (nth (nth @tableData thisTableIndex) (eval (- n @hit))))
-                  (swap! tableData update-in [thisTableIndex] #(remove-nth % (eval (- n @hit))))
-                  (println "Record Yeeted")
-                  (println "This is the table after deletion: " (nth @tableData thisTableIndex))
-                  (reset! hit (eval (+ @hit 1))))))))
-        
-          (if (= :> (nth queryElements 0))
-
-            (do
-
-              (println "Equal to")
-              (def hit (atom 0))
-              (dotimes [n (count (nth @tableData thisTableIndex))]
-                (println "Number of records: " (count (nth @tableData thisTableIndex)))
-                (println "n: " n)
-                (println "hit: " @hit)
-        ;; (println (get (nth (nth @tableData thisTableIndex) n) field))
-                (if (> (get (nth (nth @tableData thisTableIndex) (eval (- n @hit))) field) value)
-
-                  (do
-                    (println "Yeet this record: " (nth (nth @tableData thisTableIndex) (eval (- n @hit))))
-                    (swap! tableData update-in [thisTableIndex] #(remove-nth % (eval (- n @hit))))
-                    (println "Record Yeeted")
-                    (println "This is the table after deletion: " (nth @tableData thisTableIndex))
-                    (reset! hit (eval (+ @hit 1))))))))
-
-
-
-
-)
-
-
-
-
-
-
-
-
-
-
-
+  (when (= := op)
+    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (= (get y field) value) true false)) x)))))
+  (when (= :>= op)
+    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (>= (get y field) value) true false)) x)))))
+  (when (= :<= op)
+    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (<= (get y field) value) true false)) x)))))
+  (when (= :> op)
+    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (> (get y field) value) true false)) x)))))
+  (when (= :< op)
+    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (< (get y field) value) true false)) x))))))
 
 
 (create-table :employee {:id :number :first-name :string :last-name :string :salary :number})
@@ -430,17 +211,3 @@
 (println "Before: " @tableData)
 (delete :employee {:where [:< :id 4]})
 (println "After: " @tableData)
-
-;; (delete :ducks {:where [:< :id 4]})
-;; (println "After: " @tableData)
-
-
-;; (selectRecords["salary" "equals" 1000])
-;; (println @Table)
-;; (deleteRecords["salary" "equals" "1"])
-;; (println @Table)
-
-
-;; rn the code works perfectly to create arbitrary records in a table of aribitrary length
-;; now i just need to figure out a way to include type checking by using a global variable
-;; and make each table have its own type checking using one global variable
