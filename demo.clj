@@ -142,37 +142,42 @@
 
       (if (contains? (nth (nth @tableData thisTableIndex) n) (nth queryElements 1))
         (if (<  (get (nth recordInstance n) (nth queryElements 1))  queriedValue)
-          (println "Record Found: " (nth (nth @tableData thisTableIndex) n)))))))
+          (println "Record Found: " (nth (nth @tableData thisTableIndex) n))))))
+  
+  
+  )
 
 
 
 
 
 (defn delete [tableName query]
-  (def queryElements (flatten (vals query)))
-  (def operator (nth queryElements 0))
-  (def field (nth queryElements 1))
-  (def value (nth queryElements 2))
+(let [queryElements (flatten (vals query))
+      operator (nth queryElements 0)
+      field (nth queryElements 1)
+      value (nth queryElements 2)]
 
   (dotimes [n (count @tablemap)]
-
     (if (= tableName (nth @tablemap n))
       (def tableMapIndex n)))
+  
+(let [thisTableIndex  (eval (/ tableMapIndex 2))
+      op (nth queryElements 0)] 
+(cond
+  (= := op) (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (= (get y field) value) true false)) x))))
+  (= :>= op) (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (>= (get y field) value) true false)) x))))
+  (= :<= op) (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (<= (get y field) value) true false)) x))))
+  (= :> op) (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (> (get y field) value) true false)) x))))
+  (= :< op) (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (< (get y field) value) true false)) x)))))
+  :else nil)
 
-  (def thisTableIndex  (eval (/ tableMapIndex 2)))
   
-  (def op (nth queryElements 0))
+  )
   
-  (when (= := op)
-    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (= (get y field) value) true false)) x)))))
-  (when (= :>= op)
-    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (>= (get y field) value) true false)) x)))))
-  (when (= :<= op)
-    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (<= (get y field) value) true false)) x)))))
-  (when (= :> op)
-    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (> (get y field) value) true false)) x)))))
-  (when (= :< op)
-    (swap! tableData update-in [thisTableIndex] (fn [x] (vec (remove (fn [y] (if (< (get y field) value) true false)) x))))))
+)
+ 
+  
+  
 
 
 (create-table :employee {:id :number :first-name :string :last-name :string :salary :number})
